@@ -92,7 +92,7 @@ public class SearchApplet extends Applet implements ActionListener {
 		   Ergebnisvektoren 'urlVec' und 'titleVec' zufügen.
 		*/
 		for (int i = 0; i < TOTAL; i++) {
-		    ReadIndex ri = new ReadIndex(chosenLang, words.nextToken());
+		    ReadIndex ri = new ReadIndex(getAppletContext(),this, chosenLang, words.nextToken());
 		    ri.getMatches();
 		    int uCount = ri.getUrlCount();// Anzahl der URLs (=Titel)
 		    
@@ -277,7 +277,7 @@ public class SearchApplet extends Applet implements ActionListener {
 	    }
 	    
 	    else { // nur ein Suchwort AND, OR egal
-		ReadIndex ri = new ReadIndex(chosenLang, searchTerm); 
+		ReadIndex ri = new ReadIndex(getAppletContext(),this, chosenLang, searchTerm); 
 		ri.getMatches();
 		urls = ri.getURLs();
 		titles = ri.getTitles();
