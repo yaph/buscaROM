@@ -292,29 +292,40 @@ public class SearchApplet extends Applet implements ActionListener {
 				interimsHash.put(urlAr[j], titleAr[j]);
 			    }
 			    
+			    // String Repräsentation von interimsHash
+			    String intString = interimsHash.toString();
+			    
+			    // '{' und '}' entfernen
+			    String intString2 = intString.substring(1,intString.length()-1);
+			    
 			    /*
-			      Instanziierung der Arrays 'urls' und 'titles'
-			      und darauffolgende Zuweisung der Schlüssel
-			      und Werte von interimsHash
+			      intString2 anhand ', ' in Array 'iAr' splitten, um
+			      es dann sortieren zu können
 			    */
-			    urls = new String[interimsHash.size()];
-			    titles = new String[interimsHash.size()];
+			    StringTokenizer ST = new StringTokenizer(intString2, ", ");
+			    int arLength = ST.countTokens();
+			    String[] iAr = new String[arLength];
 			    
-			    Enumeration interimsKeys = interimsHash.keys();
-			    int keyCount = 0;
-			    while (interimsKeys.hasMoreElements()) {
-				urls[keyCount] = (String) interimsKeys.nextElement();
-				keyCount++;
+			    for (int x = 0; x < arLength; x++) {
+				iAr[x] = ST.nextToken();
 			    }
-
-			    Enumeration interimsValues = interimsHash.elements();
-			    int valCount = 0;
-			    while (interimsValues.hasMoreElements()) {
-				titles[valCount] = (String) interimsValues.nextElement();
-				valCount++;
-			    }
+			    Arrays.sort(iAr);
 			    
-			}
+			    // Instanziierung der Arrays 'urls' und 'titles'
+			    urls = new String[arLength];
+			    titles = new String[arLength];
+			    
+			    /*
+			      Elemente von iAr sehen folgendermaßen aus:
+			      url=title
+			      Jetzt kommt die Zuweisung zu den Ergebnissarrays
+			    */
+			    for (int j = 0; j < arLength; j++) {
+				StringTokenizer ST2 = new StringTokenizer(iAr[j], "=");
+				urls[j] = ST2.nextToken();
+				titles[j] = ST2.nextToken();
+			    }
+			} // for (int i = 0; i < TOTAL; i++)
 		    } // OR
 		} // if (!urlVec.isEmpty())
 		
