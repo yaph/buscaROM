@@ -59,17 +59,17 @@ ramiro@host:~/buscaROM > javac SearchApplet.java
 <h4>Erzeugung eines Schl&uuml;sselpaares</h4>
 <p>Zum Erzeugen eines DSA-Schl&uuml;sselpaares der L&auml;nge 1024 mit einer G&uuml;ltigkeitsdauer von 90 Tagen kann man das Programm <em>keytool</em> folgenderma&szlig;en aufrufen:</p>
 <pre>
-keytool -genkey -alias javasearch -dname "CN=Ramiro Gomez, OU=Sub-Org, O=Org, L=Berlin, C=de"
+ramiro@host:~/buscaROM > keytool -genkey -alias javasearch -dname "CN=Ramiro Gomez, OU=Sub-Org, O=Org, L=Berlin, C=de"
 </pre>
 <p>Danach muss man ein Passwort angeben, dass beim Signieren wieder ben&ouml;tigt wird.</p>
 <h4>Signierung des jar-Archivs</h4>
 <p>Um das Applet zu signieren, m&uuml;ssen die .class-Dateien in einem jar-Archiv archiviert werden. Dazu kann man folgendes Kommando im entsprechenden Verzeichnis ausf&uuml;hren:</p>
 <pre>
-jar cvf sig.jar *.class
+ramiro@host:~/buscaROM > jar cvf sig.jar *.class
 </pre>
 <p>Die Archiv-Datei <em>sig.jar</em>, die durch den letzen Schritt erzeigt wurde, wird nun mit dem Tool <em>jarsigner</em> signiert:</p>
 <pre>
-jarsigner -signedjar SignedSearch.jar sig.jar javasearch
+ramiro@host:~/buscaROM > jarsigner -signedjar SignedSearch.jar sig.jar javasearch
 </pre>
 <p>Auf die Option <em>-signedjar</em> folgt der name des signierten jar-Archivs, dass in diesem Schritt erzeugt wird. Darauf der Name des Quell-Archivs und darauf der Aliasname, der beim Erzeugen der Schl&uuml;ssel angegeben wurde. Das Signieren muss mit dem zuvor angegebenen Passwort best&auml;tigt werden.</p>
 <h2><a name="usage">Nutzung</a></h2>
@@ -97,8 +97,8 @@ jarsigner -signedjar SignedSearch.jar sig.jar javasearch
 <h2><a name="todo">Todo</a></h2>
 <ul>
 <li>Suchvorgang dokumentieren. </li>
-<li>Perl-Script zur Indexierung schreiben, dass eine Indexdatei im richtigen Format erzeugt. </li>
-<li>Java-Klasse zur Indexierung schreiben, die eine Indexdatei im richtigen Format erzeugt. </li>
+<li>Java-Klasse zur Indexierung schreiben, die eine Indexdatei im richtigen Format erzeugt.</li>
+<li>Screenshots...</li>
 </ul>
 <hr/>
 <p><a href="mailto:ramiro@prz.tu-berlin.de">Ramiro G&oacute;mez</a>
