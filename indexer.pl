@@ -1,4 +1,10 @@
 #!/usr/bin/perl -w
+# indexer.pl produces an index to be used with buscaROM.
+#
+# Copyright 2003, Ramiro Gómez.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the same terms as Perl itself.
 use HTML::Parser 3.0;
 use Carp;
 use strict;
@@ -24,31 +30,9 @@ my $rm_digits = 1;
 my %index; # where the index is stored before saving it to a file
 my $index_file = 'index.dat'; # file where index is saved
 my $file_count = 0; # How many files are processed
-my ($text,$title);
 
 # Start of script
 my $abs_path = shift or die "USAGE: $0 /path/to/dir\n";
-
-# Create one parser object for all files. Original text
-# will be stored in $text and the title in $title, thats why
-# these variables are undefined before the parsing begins
-my $p = HTML::Parser->new(api_version => 3,
-			  start_h => [ sub { my ($self, $tag) = @_;
-					     if ($tag eq 'title') {
-						 $self->{lasttag} = 'title';
-					     }
-					 }, 'self,tagname' ],
-			  text_h => [ sub { my $self = $_[0];
-					    $text .= $_[1];
-					    if (defined($self->{lasttag}) && $self->{lasttag} eq 'title') {
-						$title = $_[1];
-						undef $self->{lasttag};
-					    }
-					}, "self,dtext" ],
-			  comment_h => [""],
-			  ignore_elements => [ qw(script style) ]
-			  );
-
 scan_tree($abs_path);
 
 # Write index to 'index.dat'
@@ -89,8 +73,25 @@ sub scan_tree {
 sub parse_doc {
     my $file = shift;
     my $path = shift;
-    $text = $title = undef;
-    
+    my ($text,$title,$content);
+
+    # Original text will be stored in $text and the title in $title
+    my $p = HTML::Parser->new(api_version => 3,
+			      start_h => [ sub { my ($self, $tag) = @_;
+						 if ($tag eq 'title') {
+						     $self->{lasttag} = 'title';
+						 }
+					     }, 'self,tagname' ],
+			      text_h => [ sub { my $self = $_[0];
+						$text .= $_[1];
+						if (defined($self->{lasttag}) && $self->{lasttag} eq 'title') {
+						    $title = $_[1];
+						    undef $self->{lasttag};
+						}
+					    }, "self,dtext" ],
+			      comment_h => [""],
+			      ignore_elements => [ qw(script style) ]
+			      );
     $p->parse_file($file);
     $p->eof;
     
