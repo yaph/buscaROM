@@ -34,6 +34,7 @@ class Result extends Frame implements ActionListener {
 
 	label = new Label(TOTAL + " documents found.", Label.CENTER);
 	label.setBackground(Color.white);
+	label.setSize(600,360);
 	add(label, BorderLayout.NORTH);
 	
 	urlList = new List(20, false); // 20 Elemente sichtbar, eines auswählbar
@@ -71,7 +72,6 @@ class Result extends Frame implements ActionListener {
 	}
 	if (url != null) {
 	    appletContext.showDocument(url);
-	    System.out.println(url);
 	}
     }
     
