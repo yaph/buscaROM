@@ -20,9 +20,7 @@ public class SearchApplet extends Applet implements ActionListener {
     private TextField searchField;
     private Button searchButton;
     private String chosenLang = "German"; // 'German' default Sprache
-    private final String AND = "All Words";
-    private final String OR = "Any Word";
-    private String chosenOpt = "AND"; // 'All Words' default Option
+    private String chosenOpt = "AND"; // 'AND' default Option
     private Result result;
     private String[] urls, titles;
     
