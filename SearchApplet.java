@@ -12,12 +12,18 @@ public class SearchApplet extends Applet {
     private Choice language, searchOptions;
     private TextField searchField;
     private Button searchButton;
+    String chosenLang = "German"; // 'German' default Sprache
+    String chosenOpt = "All Words"; // 'All Words' default Option
     //    private String docBase, codeBase;
-    private char languageChosen; // German, French, Italian
-    private char optionChosen; // all words, any word 
-    
+
     public void init() {
-	// Positionierung der Elemente selbst bestimmen
+	setBackground(Color.yellow);
+
+	//****************************************************** 
+	// individuelle Positionierung der Komponenten (Layout)
+	// und die Event Bearbeitung ermöglichen
+	//******************************************************
+
 	setLayout(null);
 	
 	searchField = new TextField(20);
@@ -31,7 +37,7 @@ public class SearchApplet extends Applet {
 	add(searchButton);
 	searchButton.addMouseListener(new ButtonClick());
 
-	// Auswahlliste für die Sprachen
+	// Auswahlliste Sprachen
 	language = new Choice();
 	language.setBackground(Color.gray);
 	language.setBounds(5,40,100,30);
@@ -41,7 +47,7 @@ public class SearchApplet extends Applet {
 	add(language);
 	language.addItemListener(new LanguageChoice());
 	
-	// Auswahlliste für die Suchoptionen
+	// Auswahlliste Suchoptionen
 	//Phrasensuche aufgrund des Indexes nicht möglich
 	searchOptions = new Choice();
 	searchOptions.setBackground(Color.gray);
@@ -52,39 +58,32 @@ public class SearchApplet extends Applet {
 	searchOptions.addItemListener(new OptionChoice());
     } // init()
     
+    //*********************************************************
+    // Reaktion auf Benutzer Interaktion
+    //*********************************************************
     private class ButtonClick extends MouseAdapter {
 	public void mouseClicked(MouseEvent e) {
-	    System.out.println("x: "+e.getX()); // das funzt endlich
-	    // start search ...
+	    System.out.println(chosenLang);
+	    System.out.println(chosenOpt);
+	    // ReadIndex = new ReadIndex(chosenLang chosenOpt); 
 	}
     }
     
     private class LanguageChoice implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
-	    System.out.println(e.getItem());
+	    chosenLang = e.getItem().toString();
 	}
     }
 
     private class OptionChoice implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
-	   System.out.println(e.getItem());
+	    chosenOpt = e.getItem().toString();
 	}
     }
     
-
 } // class SearchApplet
 
 /*
-
-    
-   
-    public void paint(Graphics g) {
-	//Draw a Rectangle around the applet's display area.
-	setBackground(Color.yellow);
-	g.drawRect(0, 0, getSize().width - 1, getSize().height - 1);
-    }
-
-  
   // docBase = URL des Dokuments, in dem das Applet enthalten ist
   docBase = getDocumentBase().toString();
   // codeBase = URL des Applets
