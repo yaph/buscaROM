@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>buscaROM README.de</title>
+<link rel="stylesheet" type="text/css"
+href="http://www.ramiro.org/style/ramirostyle.css" />
+<meta http-equiv="content-type"
+content="text/html; charset=us-ascii" />
+</head>
+<body>
+<table class="navbar" width="100%">
+<tr>
+<td class="left">
+<a href="http://www.ramiro.org/">www.ramiro.org</a> : buscaROM
+README.de</td>
+<td class="right"><a href="#"
+onclick="window.print()"><img border="0"
+src="http://www.ramiro.org/pics/printer.png" />
+</a></td></tr></table>
+<ul>
+<li><a href="#buscaROM">Was ist buscaROM?</a></li>
+<li><a href="#requirements">Voraussetzungen</a> 
+<ul>
+<li><a href="#indexing">Indexierung</a></li></ul></li>
+<li><a href="#installation">Installation</a> 
+<ul>
+<li><a href="#signature">Signatur</a></li></ul></li>
+<li><a href="#usage">Nutzung</a></li>
+<li><a href="#embedding">Einbettung in HTML</a></li>
+<li><a href="#todo">Todo</a></li></ul>
+<hr />
+<h2><a name="buscaROM" id="buscaROM">Was ist buscaROM?</a></h2>
+<p>buscaROM ist ein Java-basiertes Suchinterface f&uuml;r ROM (Read
+Only Memory) Speichermedien, wie CD und DVD. Es wird als
+Java-Applet in HTML eingebunden. Nach der Sucheingabe wird der
+String mit dem Inhalt eines zuvor generierten Index verglichen. Bei
+diesem Index handelt es sich um eine Textdatei, in der jede Zeile
+einem Datensatz entspricht, der eine HTML-Datei repr&auml;sentiert.
+Ein Datensatz besteht aus drei Feldern: dem Dateinamen, dem Titel
+der HTML-Datei und einer Liste von Stichw&ouml;rtern, die mit der
+Sucheingabe verglichen werden.</p>
+<p>Suchbegriffe werden in das Textfeld des Applets eingegeben.
+Nachdem der Suchvorgang beendet ist, werden die Ergebnisse in einem
+neuen Fenster pr&auml;sentiert. Es werden die Titel der
+HTML-Dokumente aufgelistet, die die Suchbegriffe enthalten. Man
+kann einen der Titel ausw&auml;hlen und dann auf den Button 'Show
+Documents' klicken, um sich die entsprechende Seite anzeugen zu
+lassen.</p>
+<h2><a name="requirements"
+id="requirements">Voraussetzungen</a></h2>
+<p>Laden Sie die notwendigen
+<a href="http://www.ramiro.org/download/buscarom.tgz">Java-Klassen</a>
+herunter.</p>
+<h3><a name="indexing" id="indexing">Indexierung</a></h3>
+<p>Zun&auml;chst muss ein Index generiert werden, in dem folgende
+Informationen zu einer Datei jeweils in einer Zeile stehen:</p>
+<pre>
+Dok1.html|Titel des 1. Dokuments|Inhalt des 1. Dokuments
+Dok2.html|Titel des 2. Dokuments|Inhalt des 2. Dokuments
+Dok3.html|Titel des 3. Dokuments|Inhalt des 3. Dokuments
+...
+Dokn.html|Titel des n. Dokuments|Inhalt des n. Dokuments
+</pre>
+<p>Der erste Eintrag entspricht dem Namen der HTML-Datei, der
+zweite dem dazugeh&ouml;rigen Dokumenttitel und der dritte dem
+Inhalt. Der Inhalt sollte der extrahierte Text einer HTML-Datei
+sein. Es kann sich aber beispielsweise auch um eine Schlagwortliste
+handeln, aus der zuvor Stoppw&ouml;rter herausgefiltert wurden. Da
+<strong>|</strong> das Trennzeichen zwischen den einzelnen
+Eintr&auml;gen ist, darf es nicht im Text vorkommen, d.h. es muss
+ggf. beim Prozess der Indexierung entfernt werden.</p>
+<p>Zur Indexierung kann das Perl-Skript
+<a href="indexer.pl">indexer.pl</a> benutzt werden.</p>
+<h2><a name="installation" id="installation">Installation</a></h2>
+<p>Folgende Java-Source-Dateien (*.java-Dateien) m&uuml;ssen in ein
+Verzeichnis kopiert und dort kompiliert werden:</p>
+<ul>
+<li><a href="ReadIndex.java">ReadIndex.java</a></li>
+<li><a href="Result.java">Result.java</a></li>
+<li><a href="SearchApplet.java">SearchApplet.java</a></li>
+<li><a href="SortResultHash.java">SortResultHash.java</a></li></ul>
+<pre>
+ramiro@host:~/buscaROM &gt; javac SearchApplet.java 
+</pre>
+<p>Folgende Java-Byte-Code-Dateien werden erzeugt:</p>
+<ul>
+<li>ReadIndex.class</li>
+<li>Result$1.class</li>
+<li>Result$URLChoice.class</li>
+<li>Result.class</li>
+<li>SearchApplet$1.class</li>
+<li>SearchApplet$OptionChoice.class</li>
+<li>SearchApplet.class</li>
+<li>SortResultHash.class</li></ul>
+<h3><a name="signature" id="signature">Signatur</a></h3>
+<p>Da das Applet eine lokale Datei liest (index.dat) und damit
+gegen das Sicherheitsbeschr&auml;nkungen von Java-Applets
+verst&ouml;&szlig;t, muss es signiert werden, um es nutzen zu
+k&ouml;nnen. Die Signatur kann beispielsweise mit den von Sun zur
+Verf&uuml;gung gestellten Signaturwerkzeugen erfolgen.</p>
+<h4>Erzeugung eines Schl&uuml;sselpaares</h4>
+<p>Zum Erzeugen eines DSA-Schl&uuml;sselpaares der L&auml;nge 1024
+mit einer G&uuml;ltigkeitsdauer von 90 Tagen kann man das Programm
+<em>keytool</em> folgenderma&szlig;en aufrufen:</p>
+<pre>
+keytool -genkey -alias javasearch -dname "CN=Ramiro Gomez, OU=Sub-Org, O=Org, L=Berlin, C=de"
+</pre>
+<p>Danach muss man ein Passwort angeben, dass beim Signieren wieder
+ben&ouml;tigt wird.</p>
+<h4>Signierung des jar-Archivs</h4>
+<p>Um das Applet zu signieren, m&uuml;ssen die .class-Dateien in
+einem jar-Archiv archiviert werden. Dazu kann man folgendes
+Kommando im entsprechenden Verzeichnis ausf&uuml;hren:</p>
+<pre>
+jar cvf sig.jar *.class
+</pre>
+<p>Die Archiv-Datei <em>sig.jar</em>, die durch den letzen Schritt
+erzeigt wurde, wird nun mit dem Tool <em>jarsigner</em>
+signiert:</p>
+<pre>
+jarsigner -signedjar SignedSearch.jar sig.jar javasearch
+</pre>
+<p>Auf die Option <em>-signedjar</em> folgt der name des signierten
+jar-Archivs, dass in diesem Schritt erzeugt wird. Darauf der Name
+des Quell-Archivs und darauf der Aliasname, der beim Erzeugen der
+Schl&uuml;ssel angegeben wurde. Das Signieren muss mit dem zuvor
+angegebenen Passwort best&auml;tigt werden.</p>
+<h2><a name="usage" id="usage">Nutzung</a></h2>
+<p>Das signierte jar-Archiv muss sich in demselben Verzeichnis
+befinden, wie die Datei <em>index.dat</em>, die die Informationen
+der indexierten HTML-Dateien enth&auml;lt und kann dann durch die
+Einbindung in eine oder mehrere HTML-Dateien genutzt werden.</p>
+<h2><a name="embedding" id="embedding">Einbettung in HTML</a></h2>
+<p>Das Applet kann folgenderma&szlig;en in HTML-Code eingebunden
+werden:</p>
+<pre style="color:red;">
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Search&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Search&lt;/h1&gt;
+&lt;p&gt;
+&lt;OBJECT classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" WIDTH="280" HEIGHT="80"&gt;
+&lt;PARAM NAME="CODE" VALUE="SearchApplet.class"&gt;
+&lt;PARAM NAME="ARCHIVE" VALUE="SignedSearch.jar"&gt;
+&lt;PARAM NAME="type" VALUE="application/x-java-applet;version=1.2"&gt;
+&lt;/OBJECT&gt;
+&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>Ausf&uuml;hrliche Informationen zu diesem Thema findet man unter
+<a href="http://java.sun.com/j2se/1.4/docs/guide/plugin/developer_guide/using_tags.html">
+http://java.sun.com/j2se/1.4/docs/guide/plugin/developer_guide/using_tags.html</a>.</p>
+<h2><a name="todo" id="todo">Todo</a></h2>
+<ul>
+<li>Suchvorgang dokumentieren.</li>
+<li>Java-Klasse zur Indexierung schreiben, die eine Indexdatei im
+richtigen Format erzeugt.</li></ul>
+<hr />
+<p class="centersmall">&copy; 2000-2003 R. G&oacute;mez. All rights
+reserved.<br />
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+<!--
+        document.write("Last Modified " + document.lastModified);
+// -->
+//]]>
+</script></p>
+</body>
+</html>
