@@ -1,19 +1,15 @@
 import java.util.*;
 import java.io.*;
-
-// Zum Sortieren, erst ab JDK 1.2
-import java.util.Arrays;
+import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
 
 public class ReadIndex {
     private String chosenLang, chosenOpt, searchTerms;
-
-    // speichert Suchergebnisse
-    // Vielleicht Array nehmen um die Trefferliste zu begrenzen
-    // Länge der Trefferliste durch Nutzer bestimmen lassen Texteingabefeld oder Choice
     private Vector hits = new Vector();
     private int numberHits; // Anzahl der Treffer
     private String indexFile;
     final private String SEPARATOR = "|";
+    private String[] urls, titles;
+
     /**
        Die Indexdatei wird eingelesen und Zeilenweise abgearbeitet.
        Jede Zeile wird zunächst in die drei Variablen url title und keyword
@@ -74,42 +70,39 @@ public class ReadIndex {
 	catch (IOException exception) {
 	    System.out.println(indexFile + exception);
 	}
-	//Trefferliste begrenzen (Geschwindigkeit)???
-	// int countTokens() benutzen um Elementanzahl rauszufinden
 	
-	//String[] displayHits = {url, title};
-	
-    } // ReadIndex()
-    
-    public String getNumberHits() {
-	if (hits != null) { 
-	    numberHits = hits.size();
-	    String numHits = "Number of Hits: " + numberHits + "\n";
-	    return numHits;
-	}
-	else {
-	    return "0";
-	}
-    } 
-    
-    /** 
-	Gibt ein Array zurück, dass alle Elemente des Vectors 'hits' 
-	alphabetisch sortiert enthält.    
-     */
-    public String[] getHitsArray() {
+	/**
+	   Die einzelnen Objekte des Vektors 'hits' mit einer StringTokenizer Instanz
+	   in die beiden Komponenten aufspalten und in die Arrays 'titles' und 'urls' 
+	   damit füllen.
+	*/
 	if (hits != null) {
+	    final int TOTAL = hits.size();
 	    Object[] objArray = hits.toArray();
-	    String[] strArray = new String[objArray.length];
-	    for (int i = 0; i < objArray.length; i++) {
+	    String[] strArray = new String[TOTAL];
+	    titles = new String[TOTAL];
+	    urls = new String[TOTAL];
+
+	    for (int i = 0; i < TOTAL; i++) {
 		strArray[i] = objArray[i].toString();
 	    }
+	    
 	    Arrays.sort(strArray);
-	    return strArray;
-	}
-	else {
-	    //    String[] noMatches = {"No matches found."};
-	    //return noMatches;
-	    return null;
-	}
+
+	    for (int i = 0; i < TOTAL; i++) {
+		StringTokenizer urlTitle = new StringTokenizer(strArray[i], SEPARATOR);
+		titles[i] = urlTitle.nextToken();
+		urls[i] = urlTitle.nextToken();
+	    }
+	} 
+    } // ReadIndex()
+    
+    public String[] getURLs() {
+	return urls;
     }
-}
+    
+    public String[] getTitles() {
+	return titles;
+    }
+
+} // class ReadIndex
