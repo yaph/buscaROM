@@ -36,12 +36,6 @@ public class SearchApplet extends Applet implements ActionListener {
 	searchField.addActionListener(this);
 	add(searchField);
 
-	searchButton = new Button("Search!");
-	searchButton.setBackground(Color.red);
-	searchButton.setBounds(210,5,65,30);
-	searchButton.addActionListener(this);
-	add(searchButton);
-
 	// Auswahlliste Suchoptionen
 	// Phrasensuche aufgrund des Indexes nicht möglich
 	searchOptions = new Choice();
@@ -51,6 +45,12 @@ public class SearchApplet extends Applet implements ActionListener {
 	searchOptions.addItem("OR");
 	searchOptions.addItemListener(new OptionChoice());
 	add(searchOptions);
+
+	searchButton = new Button("Search!");
+	searchButton.setBackground(Color.red);
+	searchButton.setBounds(210,5,65,30);
+	searchButton.addActionListener(this);
+	add(searchButton);
     } // init()
 
     /**
