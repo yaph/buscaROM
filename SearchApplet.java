@@ -21,6 +21,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.applet.Applet;
+import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Hashtable;
@@ -273,13 +274,13 @@ public class SearchApplet extends Applet implements ActionListener {
 		    else { // OR
 			/*
 			  Die Ergebnisarrays, die von ReadIndex
-			  zurückgegeben wurden, werden aneinander-
-			  gefügt.
+			  zurückgegeben wurden, zunächst in
+			  einer Hashtable speichern, um Dubletten
+			  zu entfernen, und dann 'urls' und
+			  'titles' zuweisen.
 			*/
-			urls = new String[totalUrlCount];
-			titles = new String[totalUrlCount];
-			int counter = 0;
-			
+			Hashtable interimsHash = new Hashtable();
+						
 			for (int i = 0; i < TOTAL; i++) {
 			    // Interims Stringarrays
 			    String[] urlAr = new String[urlCount[i]];
@@ -288,10 +289,31 @@ public class SearchApplet extends Applet implements ActionListener {
 			    titleAr = (String[]) titleVec.elementAt(i);
 			    
 			    for (int j = 0; j < urlAr.length; j++) {
-				urls[counter] = urlAr[j];
-				titles[counter] = titleAr[j];
-				counter++;
+				interimsHash.put(urlAr[j], titleAr[j]);
 			    }
+			    
+			    /*
+			      Instanziierung der Arrays 'urls' und 'titles'
+			      und darauffolgende Zuweisung der Schlüssel
+			      und Werte von interimsHash
+			    */
+			    urls = new String[interimsHash.size()];
+			    titles = new String[interimsHash.size()];
+			    
+			    Enumeration interimsKeys = interimsHash.keys();
+			    int keyCount = 0;
+			    while (interimsKeys.hasMoreElements()) {
+				urls[keyCount] = (String) interimsKeys.nextElement();
+				keyCount++;
+			    }
+
+			    Enumeration interimsValues = interimsHash.elements();
+			    int valCount = 0;
+			    while (interimsValues.hasMoreElements()) {
+				titles[valCount] = (String) interimsValues.nextElement();
+				valCount++;
+			    }
+			    
 			}
 		    } // OR
 		} // if (!urlVec.isEmpty())
