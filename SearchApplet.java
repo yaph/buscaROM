@@ -21,7 +21,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.applet.Applet;
-import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Hashtable;
@@ -84,7 +83,7 @@ public class SearchApplet extends Applet implements ActionListener {
     public void actionPerformed (ActionEvent e) {
 	// String aus dem Texteingabefeld in searchTerm speichern
 	String searchTerm = searchField.getText();
-	
+
 	// Nur, wenn etwas eingegeben wurde, reagieren.
 	if (searchTerm.length() > 0) {
 
@@ -112,12 +111,12 @@ public class SearchApplet extends Applet implements ActionListener {
 		    ri.getMatches();
 		    // Anzahl der URLs (=Titel).
 		    int uCount = ri.getUrlCount();
-		    
+
 		    urlCount[i] = uCount;
 		    urlVec.add(ri.getURLs());
 		    titleVec.add(ri.getTitles());
 		    totalUrlCount += urlCount[i];
-		    
+
 		} // for (int i = 0; i < TOTAL; i++)
 
 		// Nur, wenn Ergebnisvektor nicht leer ist.
@@ -250,22 +249,18 @@ public class SearchApplet extends Applet implements ActionListener {
 			      Ergebnisarrays mit den 'keys' und 'values'
 			      von resultHash füllen.
 			    */
+
 			    int resultCount = resultHash.size(); // Anzahl der Ergebnisse
-			    
-			    // Array zum Sortieren
-			    String[] sortAr = new String[resultCount];
-			    
-			    Enumeration eUrl = resultHash.keys();
-			    Enumeration eTitle = resultHash.elements();
-			    for (int i = 0; i < resultCount; i++) {
-				sortAr[i] = (String) eTitle.nextElement() + '|' + (String) eUrl.nextElement();
-			    }
-			    Arrays.sort(sortAr);
+				String[] sortAr = new String[resultCount];
+
+				// Sortieren nach Titeln
+				SortResultHash srh = new SortResultHash(resultCount, resultHash);
+				sortAr = srh.getSorted();
 
 			    // Ergebnisarrays
 			    urls = new String[resultCount];
 			    titles = new String[resultCount];
-			    
+
 			    /*
 			      Zuweisung der gesplitteten Elemente zur 'urls'
 			      und 'titles'
@@ -274,7 +269,7 @@ public class SearchApplet extends Applet implements ActionListener {
 				StringTokenizer ST = new StringTokenizer(sortAr[i], "|");
 				titles[i] = ST.nextToken();
 				urls[i] = ST.nextToken();
-			    }		  
+			    }
 			} // if (result)
 
 			else { // bei 0 Treffern leere Arrays
@@ -304,20 +299,13 @@ public class SearchApplet extends Applet implements ActionListener {
 				interimsHash.put(urlAr[j], titleAr[j]);
 			    }
 
-			    // Zum alphabetischen Sortieren der Ergebnisse
-			    Enumeration interimsKeys = interimsHash.keys();
-			    Enumeration interimsValues = interimsHash.elements();
-			    
-			    int intCount = interimsHash.size();
-			    
-			    // interims Array intAr wird sortiert
+				int intCount = interimsHash.size();
 			    String[] intAr = new String[intCount];
-			    
-			    for (int j = 0; j < intCount; j++) {
-				intAr[j] = (String) interimsValues.nextElement() + '|' + (String) interimsKeys.nextElement();
-			    }
-			    Arrays.sort(intAr);
-			    
+
+				// Sortieren nach Titeln
+				SortResultHash srh = new SortResultHash(intCount, interimsHash);
+				intAr = srh.getSorted();
+
 			    // Instanziierung der Arrays 'urls' und 'titles'
 			    urls = new String[intCount];
 			    titles = new String[intCount];
@@ -378,4 +366,5 @@ public class SearchApplet extends Applet implements ActionListener {
     public String[] getTitles() {
 	return titles;
     }
+
 } // class SearchApplet
