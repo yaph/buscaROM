@@ -82,8 +82,7 @@ public class ReadIndex {
 	return numHits;
     } 
     
-    public void displayResults() {
-	// FALLS KEINE ERGEBNISSE STATISCHE HTML-SEITE ÖFFNEN
-	// neues Fenster mit Suchergebnissen öffnen in einem neuen Applet anzeigen lassen.
+    public Vector getHits() {
+	return hits;
     }
 }
