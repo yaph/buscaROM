@@ -1,5 +1,5 @@
 /*
-   Das Applet für die Suche im EURODELPHES Index. Das Applet besteht 
+   Das Applet für die Suche im EURODELPHES Index. Das Applet besteht
    aus einem Texteingabefeld, einer Auswahlliste, über die der Nutzer
    zwischen den Optionen 'All Words' (logisches UND) und 'Any Word'
    (logisches ODER) zur Verknüpfungen der Suchbegriffe wählen kann und
@@ -9,8 +9,8 @@
    Suchstring ein Leerzeichen enthält. Der String wird in diesem Fall in
    die einzelnen Wörter zerlegt und für jedes Wort wird ein ReadIndex Objekt
    erzeugt, dass Methoden enthält, die Stringarrays der URLs und der Titel
-   der Dokumente zurückgeben, die den Suchbegriff enthalten. Je nach 
-   Verknüpfung der Suchbegriffe (AND oder OR) wird entweder die 
+   der Dokumente zurückgeben, die den Suchbegriff enthalten. Je nach
+   Verknüpfung der Suchbegriffe (AND oder OR) wird entweder die
    Schnittmenge (AND) der zurückgegebenen Arrays ermittelt oder die
    Vereinigungsmenge (OR). Wurde nur ein Wort eingegeben wird ein
    ReadIndex Objekt erzeugt, dass das gewünschte Ergebnis ohne weitere
@@ -36,24 +36,24 @@ public class SearchApplet extends Applet implements ActionListener {
     private Result result;
     private URL baseDir;
     private String[] urls, titles; // spätere Endergebnisse
-    
+
     public void init() {
 	baseDir = getCodeBase();
 	setBackground(Color.yellow);
-	
+
 	/*
 	  Individuelle Positionierung der grafischen Komponenten
 	  (Layout des Applet).
 	*/
 	setLayout(null);
-	
+
 	// Texteingabefeld
 	searchField = new TextField(20);
 	searchField.setBackground(Color.white);
 	searchField.setBounds(5,5,200,30);
 	searchField.addActionListener(this);
 	add(searchField);
-	
+
 	/*
 	  Auswahlliste Suchoptionen
 	  Phrasensuche aufgrund des Indexes nicht möglich
@@ -65,7 +65,7 @@ public class SearchApplet extends Applet implements ActionListener {
 	searchOptions.addItem("OR");
 	searchOptions.addItemListener(new OptionChoice());
 	add(searchOptions);
-	
+
 	// Suchbutton
 	searchButton = new Button("Search!");
 	searchButton.setBackground(Color.red);
@@ -73,23 +73,23 @@ public class SearchApplet extends Applet implements ActionListener {
 	searchButton.addActionListener(this);
 	add(searchButton);
     } // init()
-    
+
     // Resultframe schließen und Result Instanz zerstören
     public void destroy() {
    	result.setVisible(false);
    	result = null;
     }
-	
+
     // Reaktion auf Benutzerinteraktion (Buttonklick)
     public void actionPerformed (ActionEvent e) {
 	// String aus dem Texteingabefeld in searchTerm speichern
 	String searchTerm = searchField.getText();
 	// mehrere Suchbegriffe sind durch Leerraum ' ' getrennt.
 	final String WS = " ";
-	
+
 	// Nur, wenn etwas eingegeben wurde, reagieren.
 	if (searchTerm.length() > 0) {
-	    
+
 	    /*
 	      Wenn mehr als ein Suchwort, den Gesamtstring in einzelne
 	      Wörter zerlegen, Trennzeichen ist Leerraum ' '.
@@ -101,7 +101,7 @@ public class SearchApplet extends Applet implements ActionListener {
 		int totalUrlCount = 0;
 		Vector urlVec = new Vector();
 		Vector titleVec = new Vector();
-		
+
 		/*
 		  Für jedes Suchwort die Ergebnissarrays holen und zum den
 		  Ergebnisvektoren 'urlVec' und 'titleVec' zufügen.
@@ -112,7 +112,7 @@ public class SearchApplet extends Applet implements ActionListener {
 		    ri.getMatches();
 		    // Anzahl der URLs (=Titel).
 		    int uCount = ri.getUrlCount();
-		    
+
 		    // Wenn uCount '0' ist, dann ist das Array leer.
 		    if (uCount > 0) {
 			urlCount[i] = uCount;
@@ -121,7 +121,7 @@ public class SearchApplet extends Applet implements ActionListener {
 			totalUrlCount += urlCount[i];
 		    }
 		} // for (int i = 0; i < TOTAL; i++)
-		
+
 		// Nur, wenn Ergebnisvektor nicht leer ist.
 		if (!urlVec.isEmpty()) {
 		    // UND Suche
@@ -133,9 +133,9 @@ public class SearchApplet extends Applet implements ActionListener {
 			*/
 			int minAr = 0; // Zunächst erstes Array auf minimum gestetzt
 			int min = 1000; // hoher Anfangswert
-			
+
 			for (int i = 0; i < urlCount.length; i++) {
-			    
+
 			    if (urlCount[i] > 0 && urlCount[i] < min) {
 				min = urlCount[i];
 				minAr = i;
@@ -155,7 +155,7 @@ public class SearchApplet extends Applet implements ActionListener {
 			Hashtable resultHash = new Hashtable();
 			String[] minArray = new String[min];
 			minArray = (String[]) urlVec.elementAt(minAr);
-			
+
 			// Hash mit URLs aus minArray füllen
 			for (int i = 0; i < min; i++) {
 			    cmpHash.put(minArray[i], "1"); // Nur an den Keys interessiert
@@ -170,12 +170,12 @@ public class SearchApplet extends Applet implements ActionListener {
 			*/
 			boolean result = true;
 			int cmpCount = 0;
-			
+
 			// Vergleich der anderen Arrays mit cmpHash
 			for (int i = 0; i < urlCount.length; i++) {
-			    
+
 			    if (result) { // Vergleich ausführen
-				
+
 				if (i != minAr) { // kürzestes Array auslassen
 				    /*
 				      Wenn noch kein Vergleich dürchgeführt wurde über alle
@@ -189,7 +189,7 @@ public class SearchApplet extends Applet implements ActionListener {
 					titleAr = (String[]) titleVec.elementAt(i);
 					cmpCount++;
 					for (int j = 0; j < urlAr.length; j++) {
-					    
+
 					    /*
 					      Wenn 'key' in 'cmpHash' dann 'url' und 'title' in
 					      'resultHash' speichern.
@@ -198,8 +198,8 @@ public class SearchApplet extends Applet implements ActionListener {
 						resultHash.put(urlAr[j], titleAr[j]);
 					    }
 					}
-				    } // if (cmpCount == 0)				
-				    
+				    } // if (cmpCount == 0)
+
 				    /*
 				      Wenn schon ein Vergleich dürchgeführt wurde und
 				      'resultHash' nicht leer ist.
@@ -215,7 +215,7 @@ public class SearchApplet extends Applet implements ActionListener {
 					  können.
 					*/
 					Hashtable currentHash = new Hashtable();
-					
+
 					for (int j = 0; j < urlAr.length; j++) {
 					    currentHash.put(urlAr[j], "1"); // Nur an den Keys interessiert
 					}
@@ -227,23 +227,23 @@ public class SearchApplet extends Applet implements ActionListener {
 					  Wenn nicht, wird er aus resultHash entfernt.
 					*/
 					Enumeration en = resultHash.keys();
-					
+
 					while (en.hasMoreElements()) {
 					    // aktuelles Element
 					    Object currentElement = en.nextElement();
 					    if ( !currentHash.containsKey(currentElement) ) {
-						resultHash.remove(currentElement);        				 	
+						resultHash.remove(currentElement);
 					    }
-					} // while (en.hasMoreElements())     					
+					} // while (en.hasMoreElements())
 				    } // else if (cmpCount > 0 && resultHash.size != 0)
-				    
+
 				    else { // sonst kein Treffer
 					result = false;
 				    } // else
 				} // if (i != minAr)
 			    } // if (result)
 			} // for (int i = 0; i < urlCount.length; i++)
-			
+
 			/*
 			  Wenn es ein Ergebnis gibt die 'keys' von resultHash
 			  im Array 'urls' speichern und die 'values' im Array
@@ -260,17 +260,17 @@ public class SearchApplet extends Applet implements ActionListener {
 			    Enumeration eUrl = resultHash.keys();
 			    Enumeration eTitle = resultHash.elements();
 			    for (int i = 0; i < resultCount; i++) {
-				urls[i] = (String) eUrl.nextElement();	
+				urls[i] = (String) eUrl.nextElement();
 				titles[i] = (String) eTitle.nextElement();
 			    }
 			} // if (result)
-			
+
 			else { // bei 0 Treffern leere Arrays
 			    urls = new String[0];
 			    titles = new String[0];
 			}
 		    } // UND Suche
-		    
+
 		    else { // OR
 			/*
 			  Die Ergebnisarrays, die von ReadIndex
@@ -280,68 +280,62 @@ public class SearchApplet extends Applet implements ActionListener {
 			  'titles' zuweisen.
 			*/
 			Hashtable interimsHash = new Hashtable();
-						
+
 			for (int i = 0; i < TOTAL; i++) {
 			    // Interims Stringarrays
 			    String[] urlAr = new String[urlCount[i]];
 			    String[] titleAr = new String[urlCount[i]];
 			    urlAr = (String[]) urlVec.elementAt(i);
 			    titleAr = (String[]) titleVec.elementAt(i);
-			    
+
 			    for (int j = 0; j < urlAr.length; j++) {
 				interimsHash.put(urlAr[j], titleAr[j]);
 			    }
+
+			    // Zum alphabetischen Sortieren der Ergebnisse
+			    Enumeration interimsKeys = interimsHash.keys();
+			    Enumeration interimsValues = interimsHash.elements();
 			    
-			    // String Repräsentation von interimsHash
-			    String intString = interimsHash.toString();
+			    int intCount = interimsHash.size();
 			    
-			    // '{' und '}' entfernen
-			    String intString2 = intString.substring(1,intString.length()-1);
+			    // interims Array intAr wird sortiert
+			    String[] intAr = new String[intCount];
 			    
-			    /*
-			      intString2 anhand ', ' in Array 'iAr' splitten, um
-			      es dann sortieren zu können
-			    */
-			    StringTokenizer ST = new StringTokenizer(intString2, ", ");
-			    int arLength = ST.countTokens();
-			    String[] iAr = new String[arLength];
-			    
-			    for (int x = 0; x < arLength; x++) {
-				iAr[x] = ST.nextToken();
+			    for (int j = 0; j < intCount; j++) {
+				intAr[j] = (String) interimsValues.nextElement() + '|' + (String) interimsKeys.nextElement();
 			    }
-			    Arrays.sort(iAr);
+			    Arrays.sort(intAr);
 			    
 			    // Instanziierung der Arrays 'urls' und 'titles'
-			    urls = new String[arLength];
-			    titles = new String[arLength];
-			    
+			    urls = new String[intCount];
+			    titles = new String[intCount];
+
 			    /*
-			      Elemente von iAr sehen folgendermaßen aus:
-			      url=title
-			      Jetzt kommt die Zuweisung zu den Ergebnissarrays
+			      Zuweisung der gesplitteten Elemente zur 'urls'
+			      und 'titles'
 			    */
-			    for (int j = 0; j < arLength; j++) {
-				StringTokenizer ST2 = new StringTokenizer(iAr[j], "=");
-				urls[j] = ST2.nextToken();
-				titles[j] = ST2.nextToken();
+			    for (int x = 0; x < intCount; x++) {
+				StringTokenizer ST = new StringTokenizer(intAr[x], "|");
+				titles[x] = ST.nextToken();
+				urls[x] = ST.nextToken();
 			    }
 			} // for (int i = 0; i < TOTAL; i++)
 		    } // OR
 		} // if (!urlVec.isEmpty())
-		
+
 		else { // bei 0 Treffern leere Arrays
 		    urls = new String[0];
 		    titles = new String[0];
 		}
 	    } // (searchTerm.indexOf(WS) > 0)
-	    
+
 	    else { // nur ein Suchwort AND, OR egal
 		ReadIndex ri = new ReadIndex(baseDir, searchTerm);
 		ri.getMatches();
 		urls = ri.getURLs();
 		titles = ri.getTitles();
 	    }
-	    
+
 	    /*
 	      Erzeugen einer Result Instanz zum Dartsellen des Suchergebnisses. Der
 	      aktuelle Appletkontext und das SearchApplet Objekt werden dem
@@ -352,7 +346,7 @@ public class SearchApplet extends Applet implements ActionListener {
 	    result.setVisible(true);
 	} // if (searchTerms.length() > 0)
     } // public void actionPerformed (ActionEvent e)
-    
+
     /*
       Innere Klasse, in die Auswahl der Suchoption durch
       den Nutzer der Variablen chosenOpt zugewiesen wird.
@@ -362,12 +356,12 @@ public class SearchApplet extends Applet implements ActionListener {
 	    chosenOpt = e.getItem().toString();
 	}
     }
-    
+
     // Methode, die das Stringarray mit den URLs zurückgibt
     public String[] getURLs() {
 	return urls;
     }
-    
+
     // Methode, die das Stringarray mit den Titeln zurückgibt
     public String[] getTitles() {
 	return titles;
