@@ -7,7 +7,6 @@
 */
 import java.util.*;
 import java.io.*;
-import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
 import java.applet.AppletContext;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -96,21 +95,20 @@ public class ReadIndex {
 
 	if (hits != null) {
 	    final int TOTAL = hits.size();
-	    Object[] objArray = hits.toArray();
-	    String[] strArray = new String[TOTAL];
+	    
 	    titles = new String[TOTAL];
 	    urls = new String[TOTAL];
 	    
-	    for (int i = 0; i < TOTAL; i++) {
-		strArray[i] = objArray[i].toString();
-	    }
-	    
-	    Arrays.sort(strArray);
-
-	    for (int i = 0; i < TOTAL; i++) {
-		StringTokenizer urlTitle = new StringTokenizer(strArray[i], SEPARATOR);
+	    /*
+	      Die Objekte des Vektors hits in die Komponenten url und title
+	      aufspalten und den zugehörigen Arrays zufügen.
+	    */
+	    int i = 0;
+	    for (Enumeration e = hits.elements() ; e.hasMoreElements() ;) {
+		StringTokenizer urlTitle = new StringTokenizer((String) e.nextElement(), SEPARATOR);
 		titles[i] = urlTitle.nextToken();
 		urls[i] = urlTitle.nextToken();
+		i++;
 	    }
 	}
     } // getMatches()
