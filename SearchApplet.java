@@ -1,7 +1,22 @@
-/**
-   Das Applet für die Suche im Eurodelphes Index. Der Nutzer kann
+/*
+   Das Applet für die Suche im EURODELPHES Index. Das Applet besteht 
+   aus einem Texteingabefeld, einer Auswahlliste, über die der Nutzer
    zwischen den Optionen 'All Words' (logisches UND) und 'Any Word'
-   (logisches ODER) zur Verknüpfungen der Suchbegriffe wählen.
+   (logisches ODER) zur Verknüpfungen der Suchbegriffe wählen kann und
+   einem Button zum Senden der Suchanfrage. Nach Senden der Suchanfrage
+   wird zunächst geprüft, ob etwas eingegeben wurde. Wenn ja wird geprüft,
+   ob mehr als ein Suchwort eingegeben wurde, was der Fall ist, wenn der
+   Suchstring ein Leerzeichen enthält. Der String wird in diesem Fall in
+   die einzelnen Wörter zerlegt und für jedes Wort wird ein ReadIndex Objekt
+   erzeugt, dass Methoden enthält, die Stringarrays der URLs und der Titel
+   der Dokumente zurückgeben, die den Suchbegriff enthalten. Je nach 
+   Verknüpfung der Suchbegriffe (AND oder OR) wird entweder die 
+   Schnittmenge (AND) der zurückgegebenen Arrays ermittelt oder die
+   Vereinigungsmenge (OR). Wurde nur ein Wort eingegeben wird ein
+   ReadIndex Objekt erzeugt, dass das gewünschte Ergebnis ohne weitere
+   Verarbeitung liefert.
+   Zur Ausgabe der Ergebnisse wird ein Result Objekt
+   erzeugt.
 */
 import java.awt.*;
 import java.awt.event.*;
@@ -27,17 +42,23 @@ public class SearchApplet extends Applet implements ActionListener {
 
 	setBackground(Color.yellow);
 
-	// individuelle Positionierung der Komponenten (Layout)
+	/*
+	  Individuelle Positionierung der grafischen Komponenten
+	  (Layout des Applet).
+	*/
 	setLayout(null);
 
+	// Texteingabefeld
 	searchField = new TextField(20);
 	searchField.setBackground(Color.white);
 	searchField.setBounds(5,5,200,30);
 	searchField.addActionListener(this);
 	add(searchField);
 
-	// Auswahlliste Suchoptionen
-	// Phrasensuche aufgrund des Indexes nicht möglich
+	/*
+	  Auswahlliste Suchoptionen
+	  Phrasensuche aufgrund des Indexes nicht möglich
+	*/
 	searchOptions = new Choice();
 	searchOptions.setBackground(Color.gray);
 	searchOptions.setBounds(105,40,100,30);
@@ -46,6 +67,7 @@ public class SearchApplet extends Applet implements ActionListener {
 	searchOptions.addItemListener(new OptionChoice());
 	add(searchOptions);
 
+	// Suchbutton
 	searchButton = new Button("Search!");
 	searchButton.setBackground(Color.red);
 	searchButton.setBounds(210,5,65,30);
@@ -53,24 +75,33 @@ public class SearchApplet extends Applet implements ActionListener {
 	add(searchButton);
     } // init()
 
-    /**
-       Result frame schließen und Result Instanz zerstören
-    */
+    
+    // Resultframe schließen und Result Instanz zerstören
     public void destroy() {
         result.setVisible(false);
         result = null;
     }
 
-    /**
-       Reaktion auf Benutzer Interaktion
-    */
+    // Reaktion auf Benutzerinteraktion (Buttonklick)
     public void actionPerformed (ActionEvent e) {
-	String searchTerm = searchField.getText();;
-	final String WS = " "; // ' ' trennt mehrere Suchbegriffe
+	
+	// String aus dem Texteingabefeld in searchTerm speichern
+	String searchTerm = searchField.getText();
+	
+	// mehrere Suchbegriffe sind durch Leerraum ' ' getrennt.
+	final String WS = " ";
 
-	if (searchTerm.length() > 0) { // nur wenn etwas eingegeben wurde reagieren
-	    if (searchTerm.indexOf(WS) > 0) { // mehr als ein Suchwort
+	// Nur, wenn etwas eingegeben wurde, reagieren.
+	if (searchTerm.length() > 0) {
+	    
+	    /*
+	      Wenn mehr als ein Suchwort, den Gesamtstring in einzelne
+	      Wörter zerlegen, Trennzeichen ist Leerraum ' '.
+	    */
+	      if (searchTerm.indexOf(WS) > 0) {
 		StringTokenizer words = new StringTokenizer(searchTerm, WS);
+		
+		// TOTAL = Anzahl der Suchwörter
 		final int TOTAL = words.countTokens();
 		int[] urlCount = new int[TOTAL];
 		int totalUrlCount = 0;
@@ -82,11 +113,15 @@ public class SearchApplet extends Applet implements ActionListener {
 		   Ergebnisvektoren 'urlVec' und 'titleVec' zufügen.
 		*/
 		for (int i = 0; i < TOTAL; i++) {
+
+		    // ReadIndex Objekt erzeugen.
 		    ReadIndex ri = new ReadIndex(baseDir, words.nextToken());
 		    ri.getMatches();
-		    int uCount = ri.getUrlCount();// Anzahl der URLs (=Titel)
 
-		    // Wenn uCount '0' ist, dann ist das Array leer
+		    // Anzahl der URLs (=Titel).
+		    int uCount = ri.getUrlCount();
+
+		    // Wenn uCount '0' ist, dann ist das Array leer.
 		    if (uCount > 0) {
 			urlCount[i] = uCount;
 			urlVec.add(ri.getURLs());
@@ -95,15 +130,15 @@ public class SearchApplet extends Applet implements ActionListener {
 		    }
 		}
 
-		// Nur wenn Ergebnisvektor nicht leer ist
+		// Nur, wenn Ergebnisvektor nicht leer ist.
 		if (!urlVec.isEmpty()) {
 
 		    // UND Suche
 		    if (chosenOpt.equals("AND")) {
 			/*
 			  Das kürzeste Array finden und nur die Elemente
-			  dieses Arrays mit den Elementen der anderen Vergleichen.
-			  Was im Gesamtergebnis ist muss auch im kürzesten Array sein.
+			  dieses Arrays mit den Elementen der anderen vergleichen.
+			  Was im Gesamtergebnis ist, muss auch im kürzesten Array sein.
 			*/
 			int minAr = 0; // Zunächst erstes Array auf minimum gestetzt
 			int min = 1000; // hoher Anfangswert
@@ -117,7 +152,7 @@ public class SearchApplet extends Applet implements ActionListener {
 			/*
 			  Die Elemente des kürzesten Arrays werden in der Hashtable
 			  cmpHash gespeichert. Die 'Keys' sind die URLs, da sie eindeutig sind.
-			  Jedes Element aller 'urls'-Arrays (mit Ausnahme des Kürzesten) wird
+			  Jedes Element aller 'urls'-Arrays (mit Ausnahme des kürzesten) wird
 			  geprüft, ob es in cmpHash vorhanden ist. Ist es vorhanden wird der
 			  aktuelle URL und der dazugehörige Titel in resultHash gespeichert.
 			  Ist nach der 1. Iteration kein Eintrag in resultHash vorhanden, wird
@@ -156,12 +191,12 @@ public class SearchApplet extends Applet implements ActionListener {
 				    if (cmpCount > 0 && resultHash.size() != 0) {
 					String[] urlAr = new String[urlCount[i]];
 					urlAr = (String[]) urlVec.elementAt(i);
-
 					cmpCount++;
 					for (int j = 0; j < urlAr.length; j++) {
 					    /*
 					      Wenn 'Key' in cmpHash aber nicht in resultHash
-					      vorhanden, 'key' aus 'cmpHash'. Sonst so belassen.
+					      vorhanden, 'key' aus 'cmpHash' entfernen,
+					      sonst so belassen.
 					    */
 					    if (cmpHash.containsKey(urlAr[j]) && !resultHash.containsKey(urlAr[j])) {
 						cmpHash.remove(urlAr[j]);
@@ -179,7 +214,6 @@ public class SearchApplet extends Applet implements ActionListener {
 					String[] titleAr = new String[urlCount[i]];
 					urlAr = (String[]) urlVec.elementAt(i);
 					titleAr = (String[]) titleVec.elementAt(i);
-
 					cmpCount++;
 					for (int j = 0; j < urlAr.length; j++) {
 					    /*
@@ -214,8 +248,8 @@ public class SearchApplet extends Applet implements ActionListener {
 			      Ergebnisarrays füllen. Da es keine Methode gibt, die
 			      alle 'keys' zurück gibt, werden die Elemente des kürzesten
 			      Arrays 'urlAr[minAr]' mit den 'keys' in resultHash vergleichen.
-			      Wenn ein Element als 'key' vorhanden ist, wird der 'key' als
-			      in Ergebnisarray 'urls' und der 'value' im Ergebnisarray
+			      Wenn ein Element als 'key' vorhanden ist, wird der 'key'
+			      im Ergebnisarray 'urls' und der 'value' im Ergebnisarray
 			      'titles' gespeichert.
 			    */
 			    urls = new String[resultHash.size()];
@@ -242,7 +276,7 @@ public class SearchApplet extends Applet implements ActionListener {
 			titles = new String[totalUrlCount];
 			int counter = 0;
 			for (int i = 0; i < TOTAL; i++) {
-			    // Interims String Arrays
+			    // Interims Stringarrays
 			    String[] urlAr = new String[urlCount[i]];
 			    String[] titleAr = new String[urlCount[i]];
 
@@ -273,25 +307,35 @@ public class SearchApplet extends Applet implements ActionListener {
 		titles = ri.getTitles();
 	    }
 
-	    // Ergebnisfenster
+	    /*
+	      Erzeugen einer Result Instanz zum Dartsellen des Suchergebnisses. Der
+	      aktuelle Appletkontext und das SearchApplet Objekt werden dem
+	      Konstruktor der Klasse Result übergeben, damit die Verweise
+	      im Ergebnisfenster funktionieren.
+	    */
 	    result = new Result(getAppletContext(),this); // this = aktuelles Applet
 	    result.setVisible(true);
 	} // if (searchTerms.length() > 0)
     } // public void actionPerformed (ActionEvent e)
+    
 
-
+    /*
+      Innere Klasse, in die Auswahl der Suchoption durch
+      den Nutzer der Variablen chosenOpt zugewiesen wird.
+    */
     private class OptionChoice implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
 	    chosenOpt = e.getItem().toString();
 	}
     }
 
+    // Methode, die das Stringarray mit den URLs zurückgibt
     public String[] getURLs() {
 	return urls;
     }
 
+    // Methode, die das Stringarray mit den Titeln zurückgibt
     public String[] getTitles() {
 	return titles;
     }
-
 } // class SearchApplet

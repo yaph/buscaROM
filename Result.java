@@ -1,5 +1,6 @@
-/**
-  Klasse zum darstellen der Suchergebnisse.
+/*
+  Klasse zum Darstellen der Suchergebnisse, die von der Klasse
+  SearchApplet aufgerufen wird.
 */
 import java.awt.*;
 import java.awt.event.*;
@@ -32,12 +33,14 @@ class Result extends Frame implements ActionListener {
 	titles = searchApplet.getTitles();
 	final int TOTAL = urls.length;
 
+	// Layout
 	label = new Label(TOTAL + " documents found.", Label.CENTER);
 	label.setBackground(Color.white);
 	label.setSize(600,360);
 	add(label, BorderLayout.NORTH);
 	
-	urlList = new List(20, false); // 20 Elemente sichtbar, eines auswählbar
+	// Liste der Ergebnisse 20 Elemente sichtbar, eines auswählbar
+	urlList = new List(20, false);
         urlList.setBackground(Color.white);
 	
 	if (titles != null) {
@@ -52,6 +55,7 @@ class Result extends Frame implements ActionListener {
 	
 	add(urlList, BorderLayout.CENTER);
 	
+	// Button
 	go = new Button("Show document");
 	go.addActionListener(this);
 	add(go, BorderLayout.SOUTH);
@@ -62,7 +66,11 @@ class Result extends Frame implements ActionListener {
 		}
 	    });
     } // Result()
-    
+
+    /*
+      Nach Drücken des Buttons 'Show document' wird das
+      gewählte Dokument im Browserfenster geladen.
+    */
     public void actionPerformed(ActionEvent e) {
 	URL url = null;
         try {
@@ -80,5 +88,4 @@ class Result extends Frame implements ActionListener {
 	    chosenURL = urlList.getSelectedIndex();
 	}
     }
-
 } // class Result

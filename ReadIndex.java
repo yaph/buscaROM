@@ -1,3 +1,10 @@
+/*
+  Liest die Zeilen der Datein index.dat Zeilenweise ein und vergleicht alle
+  Stichwörter einer Zeile mit dem Suchbegriff. Bei Übereinstimmung werden
+  URL und Titel des Dokuemnts einem Vektor zugefügt, aus dem dann zwei
+  Stringarrays erzeugt werden, die in der Klasse SearchApplet weiter verarbeitet
+  werden.
+*/
 import java.util.*;
 import java.io.*;
 import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
@@ -14,10 +21,11 @@ public class ReadIndex {
     private String[] urls, titles;
     private URL baseDir;
 
-    /**
-       <h1>Konstruktor:</h1>
-       Das Suchwort wird dem Konstruktor übergeben.
-       Das Suchwort wird einer String-Instanz zugewiesen.
+    /*
+      Konstruktor der Klasse ReadIndex:
+      Das Suchwort wird dem Konstruktor übergeben und einer
+      Stringinstanz zugewiesen. baseDir ist das Verzeichnis,
+      in dem sich die Klassen des Suchapplets befinden.
     */
     public ReadIndex(URL dir, String term) {
 	baseDir = dir;
@@ -32,18 +40,18 @@ public class ReadIndex {
 	
     } // ReadIndex()
 
-    /**
-       Die Indexdatei wird eingelesen und Zeilenweise abgearbeitet.
-       Jede Zeile wird zunächst in die drei Variablen 'url', 'title' und 'keyword'
-       aufgeteilt (Separator ist '|'). Die Zeichenkette 'keyword' wird wiederum in die
-       Stringvariable 'keywords' aufgeteilt. Die einzelnen Tokens dieses Strings werden
-       mit den Suchbegriffen verglichen. Bei einem Treffer, werden 'title' und 'url'
-       dem Vector 'hits' zusammen als eine Stringinstanz 'hits' angefügt. Der Vector
-       ist als Datenstruktur in Java dynamisch veränderbar. Da die Trefferanzahl nicht von
-       vornherein feststeht bietet er eine unkomplizierte Möglichkeit die Treffer zu speichern.
-       Nachdem die Indexdatei abgearbeitet ist, werden die einzelnen Objekte des Vektors 'hits'
-       mit einer StringTokenizer Instanz wieder in die beiden Komponenten aufspalten und in den
-       Arrays 'titles' und 'urls' gespeichert.
+    /*
+      Die Indexdatei wird eingelesen und Zeilenweise abgearbeitet.
+      Jede Zeile wird zunächst in die drei Variablen 'url', 'title' und 'keyword'
+      aufgeteilt (Separator ist '|'). Die Zeichenkette 'keyword' wird wiederum in die
+      Stringvariable 'keywords' aufgeteilt. Die einzelnen Tokens dieses Strings werden
+      mit den Suchbegriffen verglichen. Bei einem Treffer, werden 'title' und 'url'
+      dem Vector 'hits' zusammen als eine Stringinstanz 'hits' angefügt. Der Vector
+      ist als Datenstruktur in Java dynamisch veränderbar. Da die Trefferanzahl nicht von
+      vornherein feststeht, bietet er eine unkomplizierte Möglichkeit die Treffer zu speichern.
+      Nachdem die Indexdatei abgearbeitet ist, werden die einzelnen Objekte des Vektors 'hits'
+      mit einer StringTokenizer Instanz wieder in die beiden Komponenten aufgespalten und in den
+      Arrays 'titles' und 'urls' gespeichert.
     */
     public void getMatches() {
 	try {
@@ -86,7 +94,6 @@ public class ReadIndex {
 	    System.out.println("Security problem" + exception);
 	}
 
-	// Hier CASTen!!!
 	if (hits != null) {
 	    final int TOTAL = hits.size();
 	    Object[] objArray = hits.toArray();
@@ -108,24 +115,17 @@ public class ReadIndex {
 	}
     } // getMatches()
 
-    /**
-       Gibt ein Array mit den URLs der Treffer zurück.
-    */
+    // Methode gibt ein Array mit den URLs der Treffer zurück.
     public String[] getURLs() {
 	return urls;
     }
 
-    /**
-       Gibt ein Array mit den Titeln der Treffer zurück.
-    */
+    // Methode gibt ein Array mit den Titeln der Treffer zurück.
     public String[] getTitles() {
 	return titles;
     }
 
-    /**
-       Gibt Anzhal der URLs (=Anzahl der Titel) im Array
-       zurück.
-    */
+    // Methode gibt Anzhal der URLs (=Anzahl der Titel) im Array zurück.
     public int getUrlCount() {
 	return urls.length;
     }
