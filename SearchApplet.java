@@ -255,14 +255,31 @@ public class SearchApplet extends Applet implements ActionListener {
 			      von resultHash füllen.
 			    */
 			    int resultCount = resultHash.size(); // Anzahl der Ergebnisse
-			    urls = new String[resultCount];
-			    titles = new String[resultCount];
+			    
+			    // Array zum Sortieren
+			    String[] sortAr = new String[resultCount];
+			    
 			    Enumeration eUrl = resultHash.keys();
 			    Enumeration eTitle = resultHash.elements();
 			    for (int i = 0; i < resultCount; i++) {
-				urls[i] = (String) eUrl.nextElement();
-				titles[i] = (String) eTitle.nextElement();
+				sortAr[i] = (String) eTitle.nextElement() + '|' + (String) eUrl.nextElement();
+				System.out.println(sortAr[i]);
 			    }
+			    Arrays.sort(sortAr);
+
+			    // Ergebnisarrays
+			    urls = new String[resultCount];
+			    titles = new String[resultCount];
+			    
+			    /*
+			      Zuweisung der gesplitteten Elemente zur 'urls'
+			      und 'titles'
+			    */
+			    for (int i = 0; i < resultCount; i++) {
+				StringTokenizer ST = new StringTokenizer(sortAr[i], "|");
+				titles[i] = ST.nextToken();
+				urls[i] = ST.nextToken();
+			    }		  
 			} // if (result)
 
 			else { // bei 0 Treffern leere Arrays
