@@ -3,25 +3,23 @@ import java.io.*;
 import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
 
 public class ReadIndex {
-    private String chosenLang, chosenOpt, searchTerms;
+    private String chosenLang, chosenOpt, searchTerm;
+    //    private String[] searchTerms;
     private Vector hits = new Vector();
     private int numberHits; // Anzahl der Treffer
     private String indexFile;
     final private String SEPARATOR = "|";
     private String[] urls, titles;
-
+    
     /**
-       Die Indexdatei wird eingelesen und Zeilenweise abgearbeitet.
-       Jede Zeile wird zunächst in die drei Variablen url title und keyword
-       aufgeteilt (Separator ist '|'), der String keyword wird wiederum in den
-       String keywords aufgeteilt. Die einzelnen Tokens dieses Strings werden
-       mit den Suchbegriffen verglichen.
-       Vector Objekt (dynamisch veränderbar) nutzen um Treffer zu speichern.
+       <h1>Konstruktor für ein Suchwort</h1>
+       Die gewählte Sprache und das Suchwort werden dem Konstruktor übergeben.
+       Die Sprachauswahl legt fest, welcher Wert der Variablen indexFile zugewiesen wird.
+       Das Suchwort wird einer String-Instanz zugewiesen.
     */
-    public ReadIndex(String lang, String opt, String terms) {
+    public ReadIndex(String lang, String term) {
 	chosenLang = lang;
-	chosenOpt = opt;
-	searchTerms = terms;
+	searchTerm = term;
 	
 	if (chosenLang.equals("German")) {
 	    indexFile = "indexDE.dat";
@@ -30,13 +28,24 @@ public class ReadIndex {
 	} else {
 	    indexFile = "indexIT.dat";
 	}
-
-	// Zeilenweises einlesen der Indexdatei und Felder pro Eintrag in Variablen speichern
-	// keywords enthält alle keywords pro Datei
+    } // ReadIndex()
+    
+    /**
+       Die Indexdatei wird eingelesen und Zeilenweise abgearbeitet.
+       Jede Zeile wird zunächst in die drei Variablen url title und keyword
+       aufgeteilt (Separator ist '|'), der String keyword wird wiederum in den
+       String keywords aufgeteilt. Die einzelnen Tokens dieses Strings werden
+       mit den Suchbegriffen verglichen.
+       Vector Objekt (dynamisch veränderbar) nutzen um Treffer zu speichern.
+       Zeilenweises einlesen der Indexdatei und Felder pro Eintrag in Variablen speichern
+       keywords enthält alle keywords pro Datei
+    */
+    public void getMatches() {
 	try {
 	    FileReader fr = new FileReader(indexFile);
 	    BufferedReader inFile = new BufferedReader(fr);
 	    String line = inFile.readLine();
+	    
 	    while (line != null) {
 		StringTokenizer fields = new StringTokenizer (line,SEPARATOR);
 		String url = "", title = "", keyword = "";
@@ -53,10 +62,8 @@ public class ReadIndex {
 		    StringTokenizer keywords = new StringTokenizer(keyword);
 		    while (keywords.hasMoreTokens()) {
 			String word = keywords.nextToken();
-			if (word.equalsIgnoreCase(searchTerms)) {
-			    
-			    // später nach 'title' sortieren
-			    hits.add(title + SEPARATOR + url);
+			if (word.equalsIgnoreCase(searchTerm)) {
+			    hits.add(title + SEPARATOR + url); // später nach 'title' sortieren
 			}
 		    }
 		}
@@ -82,20 +89,20 @@ public class ReadIndex {
 	    String[] strArray = new String[TOTAL];
 	    titles = new String[TOTAL];
 	    urls = new String[TOTAL];
-
+	    
 	    for (int i = 0; i < TOTAL; i++) {
 		strArray[i] = objArray[i].toString();
 	    }
 	    
 	    Arrays.sort(strArray);
-
+	    
 	    for (int i = 0; i < TOTAL; i++) {
 		StringTokenizer urlTitle = new StringTokenizer(strArray[i], SEPARATOR);
 		titles[i] = urlTitle.nextToken();
 		urls[i] = urlTitle.nextToken();
 	    }
-	} 
-    } // ReadIndex()
+	} 	
+    } // getMatches()
     
     public String[] getURLs() {
 	return urls;
@@ -104,5 +111,4 @@ public class ReadIndex {
     public String[] getTitles() {
 	return titles;
     }
-
 } // class ReadIndex
