@@ -7,17 +7,22 @@ import java.awt.*;
 import java.awt.event.*;
 import java.applet.Applet;
 
-public class SearchApplet extends Applet {
+public class SearchApplet extends Applet implements ActionListener {
 
     private Choice language, searchOptions;
     private TextField searchField;
     private Button searchButton;
-    String chosenLang = "German"; // 'German' default Sprache
-    String chosenOpt = "All Words"; // 'All Words' default Option
-    //    private String docBase, codeBase;
+    private String chosenLang = "German"; // 'German' default Sprache
+    private String chosenOpt = "All Words"; // 'All Words' default Option
+    private String searchTerms;
+    private Result result;
 
     public void init() {
 	setBackground(Color.yellow);
+	
+	// Ergebnisfenster
+	result = new Result(getAppletContext());
+        result.pack(); // Fenstergröße anhand der enthaltenen Komponenten bestimmen
 
 	//****************************************************** 
 	// individuelle Positionierung der Komponenten (Layout)
@@ -30,12 +35,13 @@ public class SearchApplet extends Applet {
 	searchField.setBackground(Color.white);
 	searchField.setBounds(5,5,200,30);
 	add(searchField);
-	
+	searchField.addActionListener(this);
+
 	searchButton = new Button("Search!");
 	searchButton.setBackground(Color.red);
 	searchButton.setBounds(210,5,60,30);
 	add(searchButton);
-	searchButton.addMouseListener(new ButtonClick());
+	searchButton.addActionListener(this);
 
 	// Auswahlliste Sprachen
 	language = new Choice();
@@ -58,15 +64,20 @@ public class SearchApplet extends Applet {
 	searchOptions.addItemListener(new OptionChoice());
     } // init()
     
+    public void destroy() {
+        result.setVisible(false);
+        result = null;
+    }
+
     //*********************************************************
     // Reaktion auf Benutzer Interaktion
     //*********************************************************
-    private class ButtonClick extends MouseAdapter {
-	public void mouseClicked(MouseEvent e) {
-	    System.out.println(chosenLang);
-	    System.out.println(chosenOpt);
-	    // ReadIndex = new ReadIndex(chosenLang chosenOpt); 
-	}
+    public void actionPerformed (ActionEvent e) {
+	searchTerms = searchField.getText();
+	System.out.println(chosenLang);
+	System.out.println(chosenOpt);
+	ReadIndex ri = new ReadIndex(chosenLang, chosenOpt, searchTerms); 
+	result.setVisible(true);
     }
     
     private class LanguageChoice implements ItemListener {
