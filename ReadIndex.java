@@ -1,31 +1,54 @@
 import java.util.*;
 import java.io.*;
 import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
+import java.applet.AppletContext;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 public class ReadIndex {
     private String chosenLang, chosenOpt, searchTerm;
     private Vector hits = new Vector();
     private int numberHits; // Anzahl der Treffer
-    private String indexFile;
+    private URL indexFile;
     final private String SEPARATOR = "|";
     private String[] urls, titles;
-    
+    private SearchApplet searchApplet;
+    private AppletContext appletContext;
+
     /**
        <h1>Konstruktor:</h1>
        Die gewählte Sprache und das Suchwort werden dem Konstruktor übergeben.
        Die Sprachauswahl legt fest, welcher Wert der Variablen indexFile zugewiesen wird.
        Das Suchwort wird einer String-Instanz zugewiesen.
     */
-    public ReadIndex(String lang, String term) {
+    public ReadIndex(AppletContext appletContext, SearchApplet searchApplet, String lang, String term) {
+	this.appletContext = appletContext;
+	this.searchApplet = searchApplet;
 	chosenLang = lang;
 	searchTerm = term;
-	
+	URL baseDir = searchApplet.getCodeBase();
+
 	if (chosenLang.equals("German")) {
-	    indexFile = "indexDE.dat";
+	    try {
+		indexFile = new URL(baseDir,"indexDE.dat");
+	    }
+	    catch (MalformedURLException ex) {
+		System.out.println(ex);
+            }
 	} else if (chosenLang.equals("French")) {
-	    indexFile = "indexFR.dat";
+	    try {
+		indexFile = new URL(baseDir,"indexFR.dat");
+	    }
+	    catch (MalformedURLException ex) {
+		System.out.println(ex);
+            }
 	} else {
-	    indexFile = "indexIT.dat";
+	    try {
+		indexFile = new URL(baseDir,"indexIT.dat");
+	    }
+	    catch (MalformedURLException ex) {
+		System.out.println(ex);
+            }
 	}
     } // ReadIndex()
     
@@ -44,8 +67,8 @@ public class ReadIndex {
     */
     public void getMatches() {
 	try {
-	    FileReader fr = new FileReader(indexFile);
-	    BufferedReader inFile = new BufferedReader(fr);
+	    InputStreamReader isr = new InputStreamReader(indexFile.openStream());
+	    BufferedReader inFile = new BufferedReader(isr);
 	    String line = inFile.readLine();
 	    
 	    while (line != null) {
@@ -74,13 +97,13 @@ public class ReadIndex {
 	    inFile.close();
 	} // try
 	catch (FileNotFoundException exception) {
-	    System.err.println(indexFile + exception);
+	    System.out.println(exception);
 	}
 	catch (IOException exception) {
-	    System.err.println(indexFile + exception);
+	    System.out.println(exception);
 	}
 	catch (SecurityException exception) {
-	    System.err.println("Security problem" + exception);
+	    System.out.println("Security problem" + exception);
 	}
 	
 	// Hier CASTen!!!
