@@ -15,10 +15,10 @@ use Cwd; # module for finding the current working directory
 
 # Path prefix
 # You can set a prefix to the $path, e.g.,
-# my $path_prefix = 'http://www.rahoo.de/';
+# my $path_prefix = 'http://www.ramiro.org/';
 # This will result in a fully qualified URL
 # as the first entry for each indexed file.
-my $path_prefix = '';
+my $path_prefix = 'http://www.ramiro.org/';
 
 # Remove digits
 # If set to a true value any digits within
@@ -37,6 +37,8 @@ scan_tree($abs_path);
 
 # Write index to 'index.dat'
 open(OUT, ">$index_file") or die "Can't open $index_file:$!";
+# encode output in latin2
+binmode(OUT, ":encoding(latin2)");
 for my $key (sort keys %index) {
     print OUT "$key|", "$index{$key}{title}|", join(" ", @{$index{$key}{text}}), "\n";
 }
@@ -98,6 +100,7 @@ sub parse_doc {
     # 'clean' title string and substitute with dummy title if empty
     $title =~ s/^\s*|\s*$//g; # remove leading and trailing whitespace
     $title =~ s/\|//g; # remove vertical bars
+    $title =~ s/\n/ /g; # replace newlines
     if (!$title) { $title = 'DOCUMENT TITLE'; }
     
     # Get a list of unique keywords (set locale for languages like
