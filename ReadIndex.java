@@ -1,7 +1,8 @@
+// Copyright 2002 - 2003, Ramiro Gómez
 /*
   Liest index.dat zeilenweise ein und vergleicht alle Stichwörter einer
   Zeile mit dem Suchbegriff. Bei Übereinstimmung werden URL und Titel
-  des Dokuemnts einem Vektor zugefügt, aus dem dann zwei Stringarrays
+  des Dokuments einem Vektor zugefügt, aus dem dann zwei Stringarrays
   erzeugt werden, die in der Klasse SearchApplet weiter verarbeitet
   werden.
 */

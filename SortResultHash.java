@@ -1,3 +1,4 @@
+// Copyright 2002 - 2003, Ramiro Gómez
 // Klasse, die das Ergebnishash nach Titeln sortiert als Array zurückgibt
 
 import java.util.*;

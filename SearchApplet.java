@@ -1,5 +1,6 @@
+// Copyright 2002 - 2003, Ramiro Gómez
 /*
-   Das Applet für die Suche im EURODELPHES Index. Das Applet besteht
+   Das Applet für die Suche in index.dat. Das Applet besteht
    aus einem Texteingabefeld, einer Auswahlliste, über die der Nutzer
    zwischen den Optionen 'All Words' (logisches UND) und 'Any Word'
    (logisches ODER) zur Verknüpfungen der Suchbegriffe wählen kann und

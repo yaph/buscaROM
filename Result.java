@@ -1,3 +1,4 @@
+// Copyright 2002 - 2003, Ramiro Gómez
 /*
   Klasse zum Darstellen der Suchergebnisse, die von der Klasse
   SearchApplet aufgerufen wird. Es handelt sich um eine Klasse,
