@@ -74,12 +74,13 @@ public class SearchApplet extends Applet implements ActionListener {
 	add(searchButton);
     } // init()
 
-    // Resultframe schließen und Result Instanz zerstören
+    // Resultframe schließen
+    /*
     public void destroy() {
    	result.setVisible(false);
    	result = null;
     }
-
+    */
     // Reaktion auf Benutzerinteraktion (Buttonklick)
     public void actionPerformed (ActionEvent e) {
 	// String aus dem Texteingabefeld in searchTerm speichern
