@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Arrays;
 import java.net.URL;
 
 public class SearchApplet extends Applet implements ActionListener {
@@ -251,16 +252,16 @@ public class SearchApplet extends Applet implements ActionListener {
 			    */
 
 			    int resultCount = resultHash.size(); // Anzahl der Ergebnisse
-				String[] sortAr = new String[resultCount];
-
-				// Sortieren nach Titeln
-				SortResultHash srh = new SortResultHash(resultCount, resultHash);
-				sortAr = srh.getSorted();
-
+			    String[] sortAr = new String[resultCount];
+			    
+			    // Sortieren nach Titeln
+			    SortResultHash srh = new SortResultHash(resultCount, resultHash);
+			    sortAr = srh.getSorted();
+			    
 			    // Ergebnisarrays
 			    urls = new String[resultCount];
 			    titles = new String[resultCount];
-
+			    
 			    /*
 			      Zuweisung der gesplitteten Elemente zur 'urls'
 			      und 'titles'
@@ -271,7 +272,7 @@ public class SearchApplet extends Applet implements ActionListener {
 				urls[i] = ST.nextToken();
 			    }
 			} // if (result)
-
+			
 			else { // bei 0 Treffern leere Arrays
 			    urls = new String[0];
 			    titles = new String[0];
@@ -299,12 +300,12 @@ public class SearchApplet extends Applet implements ActionListener {
 				interimsHash.put(urlAr[j], titleAr[j]);
 			    }
 
-				int intCount = interimsHash.size();
+			    int intCount = interimsHash.size();
 			    String[] intAr = new String[intCount];
 
-				// Sortieren nach Titeln
-				SortResultHash srh = new SortResultHash(intCount, interimsHash);
-				intAr = srh.getSorted();
+			    // Sortieren nach Titeln
+			    SortResultHash srh = new SortResultHash(intCount, interimsHash);
+			    intAr = srh.getSorted();
 
 			    // Instanziierung der Arrays 'urls' und 'titles'
 			    urls = new String[intCount];
@@ -332,9 +333,32 @@ public class SearchApplet extends Applet implements ActionListener {
 	    else { // nur ein Suchwort AND, OR egal
 		ReadIndex ri = new ReadIndex(baseDir, searchTerm);
 		ri.getMatches();
-		urls = ri.getURLs();
-		titles = ri.getTitles();
-	    }
+		
+		// Um das Array nach Titel sortieren zu können
+		String[] tempTitles = ri.getTitles();
+		String[] tempUrls = ri.getURLs();
+		
+		int limit = tempUrls.length;
+		
+		// Arrays initialisieren
+		urls = new String[limit];
+		titles = new String[limit];
+		String[] titlesUrls = new String[limit];
+		
+		// Strings verknüpfen
+		for (int i = 0; i < limit; i++) {
+		    titlesUrls[i] = tempTitles[i] + "|" + tempUrls[i];
+		}
+
+		Arrays.sort(titlesUrls);
+		
+		// wieder in Komponenten aufspalten
+		for (int i = 0; i < limit; i++) { 
+		    StringTokenizer tu = new StringTokenizer(titlesUrls[i], "|");
+		    titles[i] = tu.nextToken();
+		    urls[i] = tu.nextToken();
+		} // for
+	    } // else
 
 	    /*
 	      Erzeugen einer Result Instanz zum Dartsellen des Suchergebnisses. Der
