@@ -84,9 +84,7 @@ public class SearchApplet extends Applet implements ActionListener {
     public void actionPerformed (ActionEvent e) {
 	// String aus dem Texteingabefeld in searchTerm speichern
 	String searchTerm = searchField.getText();
-	// mehrere Suchbegriffe sind durch Leerraum ' ' getrennt.
-	final String WS = " ";
-
+	
 	// Nur, wenn etwas eingegeben wurde, reagieren.
 	if (searchTerm.length() > 0) {
 
@@ -94,8 +92,9 @@ public class SearchApplet extends Applet implements ActionListener {
 	      Wenn mehr als ein Suchwort, den Gesamtstring in einzelne
 	      Wörter zerlegen, Trennzeichen ist Leerraum ' '.
 	    */
-	    if (searchTerm.indexOf(WS) > 0) {
-		StringTokenizer words = new StringTokenizer(searchTerm, WS);
+	    if (searchTerm.indexOf(" ") > 0) {
+		// Suchbegriffe durch Leerraum getrennt.
+		StringTokenizer words = new StringTokenizer(searchTerm);
 		final int TOTAL = words.countTokens(); // Anzahl der Suchwörter
 		int[] urlCount = new int[TOTAL];
 		int totalUrlCount = 0;
@@ -340,7 +339,7 @@ public class SearchApplet extends Applet implements ActionListener {
 		    urls = new String[0];
 		    titles = new String[0];
 		}
-	    } // (searchTerm.indexOf(WS) > 0)
+	    } // (searchTerm.indexOf(" ") > 0)
 
 	    else { // nur ein Suchwort AND, OR egal
 		ReadIndex ri = new ReadIndex(baseDir, searchTerm);
