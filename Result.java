@@ -24,7 +24,7 @@ class Result extends Frame implements ActionListener {
     */
     public Result(AppletContext appletContext, SearchApplet searchApplet) {
 	setLayout(new BorderLayout());
-	setSize(520,600);
+	setSize(600,500);
         this.appletContext = appletContext;
 	this.searchApplet = searchApplet;
 	
