@@ -12,22 +12,19 @@ public class ReadIndex {
     private URL indexFile;
     final private String SEPARATOR = "|";
     private String[] urls, titles;
-    private SearchApplet searchApplet;
-    private AppletContext appletContext;
-
+    private URL baseDir; 
+	
     /**
        <h1>Konstruktor:</h1>
        Die gewählte Sprache und das Suchwort werden dem Konstruktor übergeben.
        Die Sprachauswahl legt fest, welcher Wert der Variablen indexFile zugewiesen wird.
        Das Suchwort wird einer String-Instanz zugewiesen.
     */
-    public ReadIndex(AppletContext appletContext, SearchApplet searchApplet, String lang, String term) {
-	this.appletContext = appletContext;
-	this.searchApplet = searchApplet;
+    public ReadIndex(URL dir, String lang, String term) {
+	baseDir = dir;
 	chosenLang = lang;
 	searchTerm = term;
-	URL baseDir = searchApplet.getCodeBase();
-
+	
 	if (chosenLang.equals("German")) {
 	    try {
 		indexFile = new URL(baseDir,"indexDE.dat");
