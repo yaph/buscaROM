@@ -108,11 +108,11 @@ public class SearchApplet extends Applet implements ActionListener {
 		*/
 		for (int i = 0; i < TOTAL; i++) {
 		    // ReadIndex Objekt erzeugen.
-		    ReadIndex ri = new ReadIndex(baseDir, words.nextToken());
+		    String word = words.nextToken();
+		    ReadIndex ri = new ReadIndex(baseDir, word);
 		    ri.getMatches();
 		    // Anzahl der URLs (=Titel).
 		    int uCount = ri.getUrlCount();
-
 		    // Wenn uCount '0' ist, dann ist das Array leer.
 		    if (uCount > 0) {
 			urlCount[i] = uCount;
@@ -120,6 +120,16 @@ public class SearchApplet extends Applet implements ActionListener {
 			titleVec.add(ri.getTitles());
 			totalUrlCount += urlCount[i];
 		    }
+		    /*
+		      Damit für den Fall, dass einer der Suchbegriffe 2 - n 
+		      nicht vorkommt trotzdem ein Ergebnisfenster produziert wird. 
+		    */
+		    else { 
+			urlCount[i] = 0;
+			urlVec.add(ri.getURLs());
+			titleVec.add(ri.getTitles());
+		    }
+
 		} // for (int i = 0; i < TOTAL; i++)
 
 		// Nur, wenn Ergebnisvektor nicht leer ist.
@@ -133,9 +143,7 @@ public class SearchApplet extends Applet implements ActionListener {
 			*/
 			int minAr = 0; // Zunächst erstes Array auf minimum gestetzt
 			int min = 1000; // hoher Anfangswert
-
 			for (int i = 0; i < urlCount.length; i++) {
-
 			    if (urlCount[i] > 0 && urlCount[i] < min) {
 				min = urlCount[i];
 				minAr = i;
@@ -263,7 +271,6 @@ public class SearchApplet extends Applet implements ActionListener {
 			    Enumeration eTitle = resultHash.elements();
 			    for (int i = 0; i < resultCount; i++) {
 				sortAr[i] = (String) eTitle.nextElement() + '|' + (String) eUrl.nextElement();
-				System.out.println(sortAr[i]);
 			    }
 			    Arrays.sort(sortAr);
 
