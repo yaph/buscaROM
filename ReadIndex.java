@@ -1,8 +1,8 @@
 /*
-  Liest die Zeilen der Datein index.dat Zeilenweise ein und vergleicht alle
-  Stichwörter einer Zeile mit dem Suchbegriff. Bei Übereinstimmung werden
-  URL und Titel des Dokuemnts einem Vektor zugefügt, aus dem dann zwei
-  Stringarrays erzeugt werden, die in der Klasse SearchApplet weiter verarbeitet
+  Liest index.dat zeilenweise ein und vergleicht alle Stichwörter einer
+  Zeile mit dem Suchbegriff. Bei Übereinstimmung werden URL und Titel
+  des Dokuemnts einem Vektor zugefügt, aus dem dann zwei Stringarrays
+  erzeugt werden, die in der Klasse SearchApplet weiter verarbeitet
   werden.
 */
 import java.util.*;
@@ -70,7 +70,7 @@ public class ReadIndex {
 		catch (NoSuchElementException exception) {
 		    System.out.println("URL: "+url + "Title: " +title + "key: " +keyword + exception);
 		}
-
+		
 		if (keyword != null) {
 		    StringTokenizer keywords = new StringTokenizer(keyword);
 		    while (keywords.hasMoreTokens()) {
@@ -100,11 +100,11 @@ public class ReadIndex {
 	    String[] strArray = new String[TOTAL];
 	    titles = new String[TOTAL];
 	    urls = new String[TOTAL];
-
+	    
 	    for (int i = 0; i < TOTAL; i++) {
 		strArray[i] = objArray[i].toString();
 	    }
-
+	    
 	    Arrays.sort(strArray);
 
 	    for (int i = 0; i < TOTAL; i++) {
@@ -114,12 +114,12 @@ public class ReadIndex {
 	    }
 	}
     } // getMatches()
-
+    
     // Methode gibt ein Array mit den URLs der Treffer zurück.
     public String[] getURLs() {
 	return urls;
     }
-
+    
     // Methode gibt ein Array mit den Titeln der Treffer zurück.
     public String[] getTitles() {
 	return titles;
