@@ -12,7 +12,7 @@ public class ReadIndex {
     private String[] urls, titles;
     
     /**
-       <h1>Konstruktor für ein Suchwort</h1>
+       <h1>Konstruktor:</h1>
        Die gewählte Sprache und das Suchwort werden dem Konstruktor übergeben.
        Die Sprachauswahl legt fest, welcher Wert der Variablen indexFile zugewiesen wird.
        Das Suchwort wird einer String-Instanz zugewiesen.
@@ -32,13 +32,16 @@ public class ReadIndex {
     
     /**
        Die Indexdatei wird eingelesen und Zeilenweise abgearbeitet.
-       Jede Zeile wird zunächst in die drei Variablen url title und keyword
-       aufgeteilt (Separator ist '|'), der String keyword wird wiederum in den
-       String keywords aufgeteilt. Die einzelnen Tokens dieses Strings werden
-       mit den Suchbegriffen verglichen.
-       Vector Objekt (dynamisch veränderbar) nutzen um Treffer zu speichern.
-       Zeilenweises einlesen der Indexdatei und Felder pro Eintrag in Variablen speichern
-       keywords enthält alle keywords pro Datei
+       Jede Zeile wird zunächst in die drei Variablen 'url', 'title' und 'keyword'
+       aufgeteilt (Separator ist '|'). Die Zeichenkette 'keyword' wird wiederum in die
+       Stringvariable 'keywords' aufgeteilt. Die einzelnen Tokens dieses Strings werden
+       mit den Suchbegriffen verglichen. Bei einem Treffer, werden 'title' und 'url' 
+       dem Vector 'hits' zusammen als eine Stringinstanz 'hits' angefügt. Der Vector 
+       ist als Datenstruktur in Java dynamisch veränderbar. Da die Trefferanzahl nicht von 
+       vornherein feststeht bietet er eine unkomplizierte Möglichkeit die Treffer zu speichern. 
+       Nachdem die Indexdatei abgearbeitet ist, werden die einzelnen Objekte des Vektors 'hits'
+       mit einer StringTokenizer Instanz wieder in die beiden Komponenten aufspalten und in den 
+       Arrays 'titles' und 'urls' gespeichert.
     */
     public void getMatches() {
 	try {
@@ -78,11 +81,7 @@ public class ReadIndex {
 	    System.out.println(indexFile + exception);
 	}
 	
-	/**
-	   Die einzelnen Objekte des Vektors 'hits' mit einer StringTokenizer Instanz
-	   in die beiden Komponenten aufspalten und in die Arrays 'titles' und 'urls' 
-	   damit füllen.
-	*/
+	// Hier CASTen!!!
 	if (hits != null) {
 	    final int TOTAL = hits.size();
 	    Object[] objArray = hits.toArray();
@@ -104,11 +103,25 @@ public class ReadIndex {
 	} 	
     } // getMatches()
     
+    /**
+       Gibt ein Array mit den URLs der Treffer zurück.
+    */
     public String[] getURLs() {
 	return urls;
     }
     
+    /**
+       Gibt ein Array mit den Titeln der Treffer zurück.
+    */
     public String[] getTitles() {
 	return titles;
+    }
+
+    /**
+       Gibt Anzhal der URLs (=Anzahl der Titel) im Array
+       zurück.
+    */
+    public int getUrlCount() {
+	return urls.length;
     }
 } // class ReadIndex
