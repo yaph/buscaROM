@@ -4,7 +4,6 @@ import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
 
 public class ReadIndex {
     private String chosenLang, chosenOpt, searchTerm;
-    //    private String[] searchTerms;
     private Vector hits = new Vector();
     private int numberHits; // Anzahl der Treffer
     private String indexFile;
@@ -75,10 +74,13 @@ public class ReadIndex {
 	    inFile.close();
 	} // try
 	catch (FileNotFoundException exception) {
-	    System.out.println(indexFile + exception);
+	    System.err.println(indexFile + exception);
 	}
 	catch (IOException exception) {
-	    System.out.println(indexFile + exception);
+	    System.err.println(indexFile + exception);
+	}
+	catch (SecurityException exception) {
+	    System.err.println("Security problem" + exception);
 	}
 	
 	// Hier CASTen!!!
