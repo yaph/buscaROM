@@ -113,23 +113,12 @@ public class SearchApplet extends Applet implements ActionListener {
 		    ri.getMatches();
 		    // Anzahl der URLs (=Titel).
 		    int uCount = ri.getUrlCount();
-		    // Wenn uCount '0' ist, dann ist das Array leer.
-		    if (uCount > 0) {
-			urlCount[i] = uCount;
-			urlVec.add(ri.getURLs());
-			titleVec.add(ri.getTitles());
-			totalUrlCount += urlCount[i];
-		    }
-		    /*
-		      Damit für den Fall, dass einer der Suchbegriffe 2 - n 
-		      nicht vorkommt trotzdem ein Ergebnisfenster produziert wird. 
-		    */
-		    else { 
-			urlCount[i] = 0;
-			urlVec.add(ri.getURLs());
-			titleVec.add(ri.getTitles());
-		    }
-
+		    
+		    urlCount[i] = uCount;
+		    urlVec.add(ri.getURLs());
+		    titleVec.add(ri.getTitles());
+		    totalUrlCount += urlCount[i];
+		    
 		} // for (int i = 0; i < TOTAL; i++)
 
 		// Nur, wenn Ergebnisvektor nicht leer ist.
