@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Arrays; // Zum Sortieren, erst ab JDK 1.2
 import java.util.Hashtable;
+import java.net.URL;
 
 public class SearchApplet extends Applet implements ActionListener {
 
@@ -23,8 +24,11 @@ public class SearchApplet extends Applet implements ActionListener {
     private String chosenOpt = "AND"; // 'AND' default Option
     private Result result;
     private String[] urls, titles;
+    private URL baseDir;
     
-	public void init() {
+    public void init() {
+	baseDir = getCodeBase();
+	
 	setBackground(Color.yellow);
 	
 	// individuelle Positionierung der Komponenten (Layout)
@@ -92,7 +96,7 @@ public class SearchApplet extends Applet implements ActionListener {
 		   Ergebnisvektoren 'urlVec' und 'titleVec' zufügen.
 		*/
 		for (int i = 0; i < TOTAL; i++) {
-		    ReadIndex ri = new ReadIndex(getAppletContext(),this, chosenLang, words.nextToken());
+		    ReadIndex ri = new ReadIndex(baseDir, chosenLang, words.nextToken());
 		    ri.getMatches();
 		    int uCount = ri.getUrlCount();// Anzahl der URLs (=Titel)
 		    
@@ -277,7 +281,7 @@ public class SearchApplet extends Applet implements ActionListener {
 	    }
 	    
 	    else { // nur ein Suchwort AND, OR egal
-		ReadIndex ri = new ReadIndex(getAppletContext(),this, chosenLang, searchTerm); 
+		ReadIndex ri = new ReadIndex(baseDir, chosenLang, searchTerm); 
 		ri.getMatches();
 		urls = ri.getURLs();
 		titles = ri.getTitles();
