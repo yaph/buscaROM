@@ -1,5 +1,9 @@
 import java.util.*;
 import java.io.*;
+
+// Zum Sortieren, erst ab JDK 1.2
+import java.util.Arrays;
+
 public class ReadIndex {
     private String chosenLang, chosenOpt, searchTerms;
 
@@ -54,8 +58,9 @@ public class ReadIndex {
 		    while (keywords.hasMoreTokens()) {
 			String word = keywords.nextToken();
 			if (word.equalsIgnoreCase(searchTerms)) {
-			    //System.out.println(url);
-			    hits.add(url + SEPARATOR + title);
+			    
+			    // später nach 'title' sortieren
+			    hits.add(title + SEPARATOR + url);
 			}
 		    }
 		}
@@ -77,12 +82,34 @@ public class ReadIndex {
     } // ReadIndex()
     
     public String getNumberHits() {
-	numberHits = hits.size();
-	String numHits = "Number of Hits: " + numberHits + "\n";
-	return numHits;
+	if (hits != null) { 
+	    numberHits = hits.size();
+	    String numHits = "Number of Hits: " + numberHits + "\n";
+	    return numHits;
+	}
+	else {
+	    return "0";
+	}
     } 
     
-    public Vector getHits() {
-	return hits;
+    /** 
+	Gibt ein Array zurück, dass alle Elemente des Vectors 'hits' 
+	alphabetisch sortiert enthält.    
+     */
+    public String[] getHitsArray() {
+	if (hits != null) {
+	    Object[] objArray = hits.toArray();
+	    String[] strArray = new String[objArray.length];
+	    for (int i = 0; i < objArray.length; i++) {
+		strArray[i] = objArray[i].toString();
+	    }
+	    Arrays.sort(strArray);
+	    return strArray;
+	}
+	else {
+	    //    String[] noMatches = {"No matches found."};
+	    //return noMatches;
+	    return null;
+	}
     }
 }
